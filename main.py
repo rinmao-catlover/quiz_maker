@@ -68,6 +68,14 @@ def create_img(quiz_data):
 
 st.title("小テスト作成くんVer.3.0")
 
+with st.expander("-----使用方法------"):
+    st.text("単語帳を選択後、出題数・範囲を選び、[小テスト作成]ボタンを押してください")
+    st.text("開始点を終了点よりも大きくすることも可能です")
+    st.text("※注意点")
+    st.text("予期せぬバグが起こる可能性があるので自己責任でお願いします")
+    st.text("出題数を出題範囲よりも大きくするとエラーになります")
+    st.text("出題数が多すぎると画像が適切に作成されません")
+
 df_eitango, df_eijukugo, df_kobuntango = load_master_data()
 
 # データ格納用
@@ -155,8 +163,9 @@ if quiz_data["古文単語"]["book"] != "なし":
 
 ##### 作成 #####
 create = st.button("小テスト作成")
+
 if create:
-    st.write("！！！！！作成完了！！！！！")
+    st.success("小テストを作成しました！！！")
     for s in ("英単語", "英熟語", "古文単語"):
         if quiz_data[s]["book"] != "なし":
             question_list = create_question_list(quiz_data[s]["book"],
@@ -173,7 +182,19 @@ if create:
     #         for i, word, meaning in question_list:
     #             st.write(f"{i} {word} {meaning}")
 
-    img_quiz, img_answer = create_img(quiz_data)
+    if quiz_data["英単語"]["book"] != "なし":
+        out = [str(i) for i, _, _ in quiz_data["英単語"]["question_list"]]
+        out = ", ".join(out)
+        st.text_input(f"英単語({quiz_data['英単語']['book']})", out)
+    if quiz_data["英熟語"]["book"] != "なし":
+        out = [str(i) for i, _, _ in quiz_data["英単語"]["question_list"]]
+        out = ", ".join(out)
+        st.text_input(f"英熟語({quiz_data['英熟語']['book']})", out)
+    if quiz_data["古文単語"]["book"] != "なし":
+        out = [str(i) for i, _, _ in quiz_data["古文単語"]["question_list"]]
+        out = ", ".join(out)
+        st.text_input(f"古文単語({quiz_data['古文単語']['book']})", out)
 
+    img_quiz, img_answer = create_img(quiz_data)
     st.image(img_quiz, caption='問題', use_column_width=True)
     st.image(img_answer, caption='解答', use_column_width=True)
