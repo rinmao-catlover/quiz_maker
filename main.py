@@ -29,7 +29,7 @@ def section_to_number(book, start, end):
     end = section_df.loc[end]["end"]
     return start, end
 
-def create_img(quiz_data):
+def create_img(quiz_data, no_num):
     import PIL.Image
     import PIL.ImageDraw
     import PIL.ImageFont
@@ -58,8 +58,8 @@ def create_img(quiz_data):
         draw_answer.text((30, r * 20), f"{book}\n", fill=textRGB, font=font)
         r += 1
         for i, word, meaning in question_list:
-            draw_quiz.text((30, r * 20), f"{i} {word}\n", fill=textRGB, font=font)
-            draw_answer.text((30, r * 20), f"{i} {meaning}\n", fill=textRGB, font=font)
+            draw_quiz.text((30, r * 20), f"{'' if no_num else ' '+str(i)} {word}\n", fill=textRGB, font=font)
+            draw_answer.text((30, r * 20), f"{' '+str(i)} {meaning}\n", fill=textRGB, font=font)
             r += 1
         r += 1
 
@@ -162,6 +162,8 @@ if quiz_data["古文単語"]["book"] != "なし":
 
 
 ##### 作成 #####
+shuffle = st.checkbox("問題をシャッフルする")
+no_num = st.checkbox("問題番号を非表示にする")
 create = st.button("小テスト作成")
 
 if create:
@@ -172,6 +174,8 @@ if create:
                                                  quiz_data[s]["num"],
                                                  *quiz_data[s]["ranges"])
             quiz_data[s]["question_list"] = deepcopy(question_list)
+            if shuffle:
+                rnd.shuffle(quiz_data[s]["question_list"])
 
 
     # for s in ("英単語", "英熟語", "古文単語"):
@@ -183,18 +187,24 @@ if create:
     #             st.write(f"{i} {word} {meaning}")
 
     if quiz_data["英単語"]["book"] != "なし":
-        out = [str(i) for i, _, _ in quiz_data["英単語"]["question_list"]]
+        out = [i for i, _, _ in quiz_data["英単語"]["question_list"]]
+        out.sort()
+        out = [str(i) for i in out]
         out = ", ".join(out)
         st.text_input(f"英単語({quiz_data['英単語']['book']})", out)
     if quiz_data["英熟語"]["book"] != "なし":
-        out = [str(i) for i, _, _ in quiz_data["英単語"]["question_list"]]
+        out = [i for i, _, _ in quiz_data["英単語"]["question_list"]]
+        out.sort()
+        out = [str(i) for i in out]
         out = ", ".join(out)
         st.text_input(f"英熟語({quiz_data['英熟語']['book']})", out)
     if quiz_data["古文単語"]["book"] != "なし":
-        out = [str(i) for i, _, _ in quiz_data["古文単語"]["question_list"]]
+        out = [i for i, _, _ in quiz_data["古文単語"]["question_list"]]
+        out.sort()
+        out = [str(i) for i in out]
         out = ", ".join(out)
         st.text_input(f"古文単語({quiz_data['古文単語']['book']})", out)
 
-    img_quiz, img_answer = create_img(quiz_data)
+    img_quiz, img_answer = create_img(quiz_data, no_num=no_num)
     st.image(img_quiz, caption='問題', use_column_width=True)
     st.image(img_answer, caption='解答', use_column_width=True)
