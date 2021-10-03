@@ -65,9 +65,11 @@ def create_img(quiz_data, no_num):
 
     return img_quiz, img_answer
 
+col1, col2 = st.columns((2, 1))
+col1.markdown("# 小テスト作成くんVer.3.0")
+col2.write("<br><br>created by Rin, ANGYM CEO", unsafe_allow_html=True)
 
-st.title("小テスト作成くんVer.3.0")
-
+st.markdown('***')
 with st.expander("-----使用方法------"):
     st.text("単語帳を選択後、出題数・範囲を選び、[小テスト作成]ボタンを押してください")
     st.text("開始点を終了点よりも大きくすることも可能です")
@@ -76,6 +78,7 @@ with st.expander("-----使用方法------"):
     st.text("出題数を出題範囲よりも大きくするとエラーになります")
     st.text("出題数が多すぎると画像が適切に作成されません")
 
+st.markdown('***')
 df_eitango, df_eijukugo, df_kobuntango = load_master_data()
 
 # データ格納用
@@ -161,11 +164,13 @@ if quiz_data["古文単語"]["book"] != "なし":
 
 
 
-##### 作成 #####
+st.write("#### オプション", unsafe_allow_html=True)
 shuffle = st.checkbox("問題をシャッフルする")
 no_num = st.checkbox("問題番号を非表示にする")
 create = st.button("小テスト作成")
 
+st.markdown('***')
+##### 作成 #####
 if create:
     st.success("小テストを作成しました！！！")
     for s in ("英単語", "英熟語", "古文単語"):
@@ -186,6 +191,9 @@ if create:
     #         for i, word, meaning in question_list:
     #             st.write(f"{i} {word} {meaning}")
 
+    st.text("\n")
+    st.text("\n")
+    st.markdown("### 出題番号")
     if quiz_data["英単語"]["book"] != "なし":
         out = [i for i, _, _ in quiz_data["英単語"]["question_list"]]
         out.sort()
@@ -206,5 +214,11 @@ if create:
         st.text_input(f"古文単語({quiz_data['古文単語']['book']})", out)
 
     img_quiz, img_answer = create_img(quiz_data, no_num=no_num)
-    st.image(img_quiz, caption='問題', use_column_width=True)
-    st.image(img_answer, caption='解答', use_column_width=True)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("### 問題")
+        st.image(img_quiz, use_column_width=True)
+    with col2:
+        st.markdown("### 解答")
+        st.image(img_answer, use_column_width=True)
