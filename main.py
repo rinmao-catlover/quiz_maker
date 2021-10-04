@@ -90,7 +90,8 @@ quiz_data = {s:{"book": "なし",
 
 ##### 英単語 #####
 st.markdown("### 英単語")
-quiz_data["英単語"]["book"] = st.selectbox(
+_, col = st.columns((.1, 3))
+quiz_data["英単語"]["book"] = col.selectbox(
     "使用する英単語を選んでください",
     ["なし"]+list(df_eitango.index),
 )
@@ -98,16 +99,16 @@ if quiz_data["英単語"]["book"] != "なし":
     book = quiz_data["英単語"]["book"]
     use_section = False
     if df_eitango.loc[book].section != "F":
-        use_section = st.checkbox("章番号を使用する")
+        use_section = col.checkbox("章番号を使用する")
     if use_section:
         volume = int(df_eitango.loc[book].section)
     else:
         volume = df_eitango.loc[book].volume
 
-    quiz_data["英単語"]["num"] = st.number_input("英単語の出題数を選んでください", 1, 20, 15)
-    start = st.number_input(f"開始点をえらんでくさい(1-{volume})",
+    quiz_data["英単語"]["num"] = col.number_input("英単語の出題数を選んでください", 1, 20, 15)
+    start = col.number_input(f"開始点をえらんでくさい(1-{volume})",
                     1, volume, 1)
-    end = st.number_input(f"終了点を選んでください(1-{volume})",
+    end = col.number_input(f"終了点を選んでください(1-{volume})",
                     1, volume, volume)
     if use_section:
         start, end = section_to_number(book, start, end)
@@ -115,7 +116,8 @@ if quiz_data["英単語"]["book"] != "なし":
 
 ##### 英熟語 #####
 st.markdown("### 英熟語")
-quiz_data["英熟語"]["book"] = st.selectbox(
+_, col = st.columns((.1, 3))
+quiz_data["英熟語"]["book"] = col.selectbox(
     "使用する英熟語を選んでください",
     ["なし"]+list(df_eijukugo.index),
 )
@@ -123,15 +125,15 @@ if quiz_data["英熟語"]["book"] != "なし":
     use_section = False
     book = quiz_data["英熟語"]["book"]
     if df_eijukugo.loc[book].section != "F":
-        use_section = st.checkbox("章番号を使用する")
+        use_section = col.checkbox("章番号を使用する")
     if use_section:
         volume = int(df_eijukugo.loc[book].section)
     else:
         volume = df_eijukugo.loc[book].volume
-    quiz_data["英熟語"]["num"] = st.number_input("英熟語の出題数を選んでください", 1, 20, 15)
-    start = st.number_input(f"開始点をえらんでくさい(1-{volume})",
+    quiz_data["英熟語"]["num"] = col.number_input("英熟語の出題数を選んでください", 1, 20, 15)
+    start = col.number_input(f"開始点をえらんでくさい(1-{volume})",
                     1, volume, 1)
-    end = st.number_input(f"終了点を選んでください(1-{volume})",
+    end = col.number_input(f"終了点を選んでください(1-{volume})",
                     1, volume, volume)
     if use_section:
         start, end = section_to_number(book, start, end)
@@ -139,7 +141,8 @@ if quiz_data["英熟語"]["book"] != "なし":
 
 ##### 古文単語 #####
 st.markdown("### 古文単語")
-quiz_data["古文単語"]["book"] = st.selectbox(
+_, col = st.columns((.1, 3))
+quiz_data["古文単語"]["book"] = col.selectbox(
     "使用する古文単語を選んでください",
     ["なし"]+list(df_kobuntango.index),
 )
@@ -147,16 +150,16 @@ if quiz_data["古文単語"]["book"] != "なし":
     use_section = False
     book = quiz_data["古文単語"]["book"]
     if df_kobuntango.loc[book].section != "F":
-        use_section = st.checkbox("章番号を使用する")
+        use_section = col.checkbox("章番号を使用する")
     if use_section:
         volume = int(df_kobuntango.loc[book].section)
     else:
         volume = df_kobuntango.loc[book].volume
 
-    quiz_data["古文単語"]["num"] = st.number_input("古文単語の出題数を選んでください", 1, 20, 15)
-    start = st.number_input(f"開始点をえらんでくさい(1-{volume})",
+    quiz_data["古文単語"]["num"] = col.number_input("古文単語の出題数を選んでください", 1, 20, 15)
+    start = col.number_input(f"開始点をえらんでくさい(1-{volume})",
                     1, volume, 1)
-    end = st.number_input(f"終了点を選んでください(1-{volume})",
+    end = col.number_input(f"終了点を選んでください(1-{volume})",
                     1, volume, volume)
     if use_section:
         start, end = section_to_number(book, start, end)
@@ -165,8 +168,9 @@ if quiz_data["古文単語"]["book"] != "なし":
 
 
 st.write("#### オプション", unsafe_allow_html=True)
-shuffle = st.checkbox("問題をシャッフルする")
-no_num = st.checkbox("問題番号を非表示にする")
+_, col = st.columns((.1, 3))
+shuffle = col.checkbox("問題をシャッフルする")
+no_num = col.checkbox("問題番号を非表示にする")
 create = st.button("小テスト作成")
 
 st.markdown('***')
